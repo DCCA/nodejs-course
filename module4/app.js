@@ -1,13 +1,29 @@
 const express = require('express');
 const path = require('path');
+
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const bodyParser = require('body-parser');
 
+const expressHbs = require('express-handlebars');
+
 const app = express();
 
-// Set the template engine
-app.set('view engine', 'pug');
+// Set manually the view engine
+app.engine(
+	'hbs',
+	expressHbs({
+		layoutsDir: 'views/layouts/',
+		defaultLayout: 'main-layout',
+		extname: 'hbs',
+	})
+);
+
+// Set handlebars as template engine
+app.set('view engine', 'hbs');
+// Set the pug template engine
+// app.set('view engine', 'pug');
+
 app.set('views', 'views');
 
 // Active to get data from forms
