@@ -24,3 +24,6 @@ $RECYCLE.BIN/
 .DS_Store
 .Spotlight-V100
 .Trashes
+
+# DB Connections
+util/database.js

@@ -11,14 +11,6 @@ const db = require('./util/database');
 // App
 const app = express();
 
-db.execute('SELECT * FROM products')
-    .then(result => {
-        console.log(result);
-    })
-    .catch(err => {
-        console.log(err);
-    });
-
 // Set EJS as template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
