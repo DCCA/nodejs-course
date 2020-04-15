@@ -5,7 +5,7 @@ exports.postAddProduct = (req, res) => {
 	const price = req.body.price;
 	const imageUrl = req.body.imageUrl
 	const description = req.body.description
-	const product = new Product(title, imageUrl, description, price);
+	const product = new Product(null, title, imageUrl, description, price);
 	product.save();
 	res.redirect('/');
 }
@@ -29,6 +29,22 @@ exports.getEditProduct = (req, res, next) => {
 	})
 }
 
+exports.postEditProduct = (req, res, next) => {
+	const prodId = req.body.productId;
+	const updatedTitle = req.body.title;
+	const updatedPrice = req.body.price;
+	const updatedImageUrl = req.body.imageUr;;
+	const updatedDescription = req.body.Description;
+	const updateProduct = new Product(
+		prodId, 
+		updatedTitle, 
+		updatedImageUrl, 
+		updatedDescription, 
+		updatedPrice);
+	updateProduct.save();
+	res.redirect('/admin/products')
+}
+
 exports.getAddProduct = (req, res, next) => {
 	res.render('admin/edit-product', {
 		pageTitle: 'Add Products',
@@ -47,4 +63,11 @@ exports.getProductsAdmin = (req, res, next) => {
 			hasProducts: products.length > 0,
 		});
 	});
+}
+
+exports.postDeleteProduct = (req, res, next) => {
+	const prodId = req.body.productId;
+	//TODO - Implement a Call Back so we just redirect once the delete is done
+	Product.deleteById(prodId);
+	res.redirect('/admin/products');
 }

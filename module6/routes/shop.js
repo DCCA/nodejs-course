@@ -6,6 +6,8 @@ router.get('/cart', shopController.getProductsCart);
 
 router.post('/cart', shopController.postProductsCart);
 
+router.post('/cart-delete-item', shopController.postCartDeleteProduct);
+
 router.get('/products', shopController.getProductsList);
 
 // Setting a dynamic route
