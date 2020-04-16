@@ -13,7 +13,7 @@ router.get('/products', shopController.getProductsList);
 // Setting a dynamic route
 router.get('/products/:productId', shopController.getProduct);
 
-router.get('/checkout', shopController.getCheckout);
+router.post('/create-order', shopController.postOrder);
 
 router.get('/orders', shopController.getOrders);
 

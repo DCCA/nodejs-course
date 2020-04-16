@@ -5,12 +5,14 @@ exports.postAddProduct = (req, res) => {
 	const price = req.body.price;
 	const imageUrl = req.body.imageUrl
 	const description = req.body.description
-	Product.create({
+	req.user.createProduct({ 
 		title: title,
 		imageUrl: imageUrl,
 		price: price,
-		description: description
-	}).then(result => {
+		description: description,
+		userId: req.user.id
+		})
+		.then(result => {
 		// console.log(result);
 		console.log('Created Product');
 		res.redirect('/admin/products');
@@ -23,8 +25,10 @@ exports.getEditProduct = (req, res, next) => {
 		return res.redirect('/');
 	}
 	const prodId = req.params.productId;
-	Product.findByPk(prodId)
-		.then(product => {
+	req.user
+		.getProducts({where: {id: prodId}})
+		.then(products => {
+			const product = products[0];
 			if(!product) {
 				return res.redirect('/');
 			}
@@ -45,7 +49,8 @@ exports.postEditProduct = (req, res, next) => {
 	const updatedPrice = req.body.price;
 	const updatedImageUrl = req.body.imageUrl;
 	const updatedDescription = req.body.description;
-	Product.findByPk(prodId).then(
+	Product.findByPk(prodId)
+		.then(
 		product => {
 			product.title       = updatedTitle;
 			product.price       = updatedPrice;
@@ -70,7 +75,8 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.getProductsAdmin = (req, res, next) => {
-	Product.findAll()
+	req.user
+		.getProducts()
 		.then(products => {
 			res.render('admin/products', {
 				prods: products,
