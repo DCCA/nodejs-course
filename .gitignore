@@ -26,4 +26,4 @@ $RECYCLE.BIN/
 .Trashes
 
 # DB Connections
-util/database.js
+*/util/database.js
