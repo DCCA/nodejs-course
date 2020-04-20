@@ -36,6 +36,7 @@ class Product {
     static findById(prodId) {
         const db = getDb();
         return db.collection('products')
+            // Use the find method to get item by ID with the MongoDB ID
             .find({_id: new mongodb.ObjectId(prodId)})
             .next()
             .then(product => {
