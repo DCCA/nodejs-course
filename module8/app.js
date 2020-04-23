@@ -8,6 +8,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 // Connection to DB
 const mongoConnect = require('./util/database').mongoConnect;
+const User = require('./models/user');
 // App
 const app = express();
 
@@ -21,13 +22,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    // User.findByPk(1)
-    //     .then(user => {
-    //         req.user = user;
-    //         next();
-    //     })
-    //     .catch( err => console.log(err));
-    next()
+    User.findById('5ea1ac51035ee5459d282482')
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch( err => console.log(err));
 })
 
 // Active routes
