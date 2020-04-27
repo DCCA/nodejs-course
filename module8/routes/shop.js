@@ -4,7 +4,7 @@ const shopController = require('../controllers/shop');
 
 // router.get('/cart', shopController.getProductsCart);
 
-// router.post('/cart', shopController.postProductsCart);
+router.post('/cart', shopController.postProductsCart);
 
 // router.post('/cart-delete-item', shopController.postCartDeleteProduct);
 
