@@ -5,12 +5,19 @@ const express = require('express');
 const session = require('express-session');
 
 const bodyParser = require('body-parser');
-const dbConnection = require('./util/database');
+const dbConnection = require('./util/database').dbConnection;
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const app = express();
+// Set the store for MongoDB
+const MONGODB_URI = require('./util/database').MONGODB_URI;
+const store = new MongoDBStore({
+	uri: MONGODB_URI,
+	collection: 'sessions',
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -23,11 +30,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 // Configure the session middleware
 app.use(
-	session({ secret: 'my-secret', resave: false, saveUninitialized: false })
+	session({
+		secret: 'my-secret',
+		resave: false,
+		saveUninitialized: false,
+		store: store,
+	})
 );
 
 app.use((req, res, next) => {
-	User.findById('5ea7453b923fe8a922fc649a')
+	if (!req.session.user) {
+		return next();
+	}
+	User.findById(req.session.user._id)
 		.then((user) => {
 			req.user = user;
 			next();
