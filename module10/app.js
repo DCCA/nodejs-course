@@ -1,6 +1,9 @@
 const path = require('path');
 
 const express = require('express');
+// Express for session
+const session = require('express-session');
+
 const bodyParser = require('body-parser');
 const dbConnection = require('./util/database');
 
@@ -18,6 +21,10 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+// Configure the session middleware
+app.use(
+	session({ secret: 'my-secret', resave: false, saveUninitialized: false })
+);
 
 app.use((req, res, next) => {
 	User.findById('5ea7453b923fe8a922fc649a')
