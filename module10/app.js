@@ -2,7 +2,6 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const dbConnection = require('./util/database');
 
 const errorController = require('./controllers/error');
