@@ -10,7 +10,17 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post(
+	'/login',
+	// Validation block
+	[
+		body('email', 'Invalid e-mail or password').isEmail(),
+		body('password', 'Invalid e-mail or password')
+			.isLength({ max: 5 })
+			.isAlphanumeric(),
+	],
+	authController.postLogin
+);
 
 router.post(
 	'/signup',
