@@ -27,3 +27,6 @@ $RECYCLE.BIN/
 
 # DB Connections
 */util/database.js
+
+# Api Credentials
+*/util/api-keys.js
