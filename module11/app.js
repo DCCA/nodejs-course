@@ -11,6 +11,9 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 // Add package to prevent CSRF attacks
 const csrf = require('csurf');
 
+// Add flash
+const flash = require('connect-flash');
+
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
@@ -40,6 +43,7 @@ app.use(
 );
 // After we initialize the session
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
 	if (!req.session.user) {
