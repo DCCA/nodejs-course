@@ -8,6 +8,9 @@ const MONGODB_URI = require('./util/database').MONGODB_URI;
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
+// Add package to prevent CSRF attacks
+const csrf = require('csurf');
+
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
@@ -16,6 +19,7 @@ const store = new MongoDBStore({
 	uri: MONGODB_URI,
 	collection: 'sessions',
 });
+const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -28,12 +32,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
 	session({
-		secret: 'my secre',
+		secret: 'my secret',
 		resave: false,
 		saveUninitialized: false,
 		store: store,
 	})
 );
+// After we initialize the session
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
 	if (!req.session.user) {
@@ -45,6 +51,13 @@ app.use((req, res, next) => {
 			next();
 		})
 		.catch((err) => console.log(err));
+});
+
+app.use((req, res, next) => {
+	// Let set locals var to all views
+	res.locals.isAuthenticated = req.session.isLoggedIn;
+	res.locals.csrfToken = req.csrfToken();
+	next();
 });
 
 app.use('/admin', adminRoutes);
