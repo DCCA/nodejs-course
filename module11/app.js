@@ -55,18 +55,6 @@ app.use(errorController.get404);
 
 dbConnection
 	.then((result) => {
-		User.findOne().then((user) => {
-			if (!user) {
-				const user = new User({
-					name: 'DCCA',
-					email: 'dcca12@gmail.com',
-					cart: {
-						items: [],
-					},
-				});
-				user.save();
-			}
-		});
 		app.listen(3000);
 	})
 	.catch((err) => {
