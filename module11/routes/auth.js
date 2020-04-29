@@ -14,10 +14,11 @@ router.post(
 	'/login',
 	// Validation block
 	[
-		body('email', 'Invalid e-mail or password').isEmail(),
+		body('email', 'Invalid e-mail or password').isEmail().normalizeEmail(),
 		body('password', 'Invalid e-mail or password')
 			.isLength({ max: 5 })
-			.isAlphanumeric(),
+			.isAlphanumeric()
+			.trim(),
 	],
 	authController.postLogin
 );
@@ -45,20 +46,24 @@ router.post(
 						return Promise.reject('E-mail already taken.');
 					}
 				});
-			}),
+			})
+			.normalizeEmail(),
 		body(
 			'password',
 			// Message for all validations
 			'Please enter a password with only numbers and text and at least 5 characters'
 		)
 			.isLength({ min: 5 })
-			.isAlphanumeric(),
-		body('confirmPassword').custom((value, { req }) => {
-			if (value !== req.body.password) {
-				throw new Error("The passwords don't match ");
-			}
-			return true;
-		}),
+			.isAlphanumeric()
+			.trim(),
+		body('confirmPassword')
+			.custom((value, { req }) => {
+				if (value !== req.body.password) {
+					throw new Error("The passwords don't match ");
+				}
+				return true;
+			})
+			.trim(),
 	],
 	authController.postSignup
 );
