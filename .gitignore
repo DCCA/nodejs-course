@@ -30,3 +30,7 @@ $RECYCLE.BIN/
 
 # Api Credentials
 */util/api-keys.js
+
+# Images folder
+*/images/*
+*/data/invoices/*
