@@ -14,10 +14,10 @@ router.post(
 	'/login',
 	// Validation block
 	[
-		body('email', 'Invalid e-mail or password').isEmail().normalizeEmail(),
-		body('password', 'Invalid e-mail or password')
+		body('email', 'Invalid e-mail').isEmail().normalizeEmail(),
+		body('password', 'Invalid password')
 			.isLength({ max: 5 })
-			.isAlphanumeric()
+			// .isAlphanumeric()
 			.trim(),
 	],
 	authController.postLogin
