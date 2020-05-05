@@ -106,7 +106,7 @@ exports.updatePost = (req, res, next) => {
 	const error = validationResult(req);
 	if (!error.isEmpty()) {
 		const error = new Error('Validation has failed. Data is incorrect.');
-		error.status(422);
+		error.statusCode = 422;
 		throw error;
 	}
 	const postId = req.params.postId;
@@ -181,6 +181,58 @@ exports.deletePost = (req, res, next) => {
 		.then((result) => {
 			console.log(result);
 			return res.status(200).json({ message: 'Post deleted', post: result });
+		})
+		.catch((err) => {
+			if (!err.statusCode) {
+				err.statusCode = 500;
+			}
+			next(err);
+		});
+};
+
+exports.getStatus = (req, res, next) => {
+	const userId = req.userId;
+	User.findById(userId)
+		.then((user) => {
+			if (!user) {
+				const error = new Error('User not found');
+				error.statusCode = 404;
+				throw error;
+			}
+			const status = user.status;
+			return res.status(200).json({ status: status });
+		})
+		.catch((err) => {
+			if (!err.statusCode) {
+				err.statusCode = 500;
+			}
+			next(err);
+		});
+};
+
+exports.updateStatus = (req, res, next) => {
+	console.log(req);
+	const error = validationResult(req);
+	if (!error.isEmpty()) {
+		const error = new Error('Validation has failed. Data is incorrect.');
+		error.statusCode = 422;
+		throw error;
+	}
+	const userId = req.userId;
+	const updatedStatus = req.body.status;
+	User.findById(userId)
+		.then((user) => {
+			if (!user) {
+				const error = new Error('No user found');
+				error.statusCode = 404;
+				throw error;
+			}
+			user.status = updatedStatus;
+			return user.save();
+		})
+		.then((result) => {
+			console.log(result);
+			res.status(200).json({ message: 'Status updated' });
 		})
 		.catch((err) => {
 			if (!err.statusCode) {
