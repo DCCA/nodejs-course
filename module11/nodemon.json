@@ -1,0 +1,8 @@
+{
+	"env": {
+		"MONGO_USER": "root",
+		"MONGO_PASSWORD": "12Guitar",
+		"MONGO_DEFAULT_DB": "shop",
+		"STRIPE_KEY": "sk_test_MohG2qnRZWi4e5cjO9BLrrU0002FDkehV9"
+	}
+}

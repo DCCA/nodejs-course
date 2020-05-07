@@ -1,17 +1,21 @@
 const path = require('path');
-
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const mongoose = require('mongoose');
 const dbConnection = require('./util/database').dbConnection;
 const MONGODB_URI = require('./util/database').MONGODB_URI;
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+// Add https for dev
+// const https = require('https');
+// const privateKey = fs.readFileSync('server.key');
+// const certificate = fs.readFileSync('server.cert');
 // Add package to prevent CSRF attacks
 const csrf = require('csurf');
-
 // Add flash
 const flash = require('connect-flash');
 
@@ -31,6 +35,18 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
+
+const accessLogStream = fs.createWriteStream(
+	path.join(__dirname, 'access.log'),
+	{ flags: 'a' }
+);
+
+// Add safer headers
+app.use(helmet());
+// Add compressios
+app.use(compression());
+// Tool for logging
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // Multer config and initializing
@@ -110,7 +126,9 @@ app.use((error, req, res, next) => {
 
 dbConnection
 	.then((result) => {
-		app.listen(3000);
+		// https
+		// 	.createServer({ key: privateKey, cert: certificate }, app)
+		app.listen(process.env.PORT || 3000);
 	})
 	.catch((err) => {
 		console.log(err);
