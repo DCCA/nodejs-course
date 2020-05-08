@@ -172,8 +172,8 @@ exports.getStatus = async (req, res, next) => {
 			error.statusCode = 404;
 			throw error;
 		}
-		const status = user.status;
-		return res.status(200).json({ status: status });
+		const statusCode = user.status;
+		return res.status(200).json({ status: statusCode });
 	} catch (err) {
 		err.statusCode = 500;
 		next(err);
